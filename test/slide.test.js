@@ -8,8 +8,6 @@ const path = require('path');
 const { io: connect } = require('socket.io-client');
 const { createApp } = require('../server');
 
-// TEST_DATABASE_URL verilirse PostgreSQL üzerinde çalışır (slide_* tabloları silinir)
-const databaseUrl = process.env.TEST_DATABASE_URL || null;
 let dataDir;
 let server;
 let base;
@@ -19,16 +17,8 @@ const sockets = [];
 const JPEG = Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.alloc(200, 7)]);
 const PNG = Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), Buffer.alloc(200, 3)]);
 
-async function resetDb() {
-  if (!databaseUrl) return;
-  const { Pool } = require('pg');
-  const pool = new Pool({ connectionString: databaseUrl });
-  await pool.query('DROP TABLE IF EXISTS slide_images, slide_decks, slide_sessions');
-  await pool.end();
-}
-
 async function start() {
-  const s = createApp({ dataDir, databaseUrl, password: 'gizli' });
+  const s = createApp({ dataDir, password: 'gizli' });
   await s.ready;
   await new Promise((r) => s.httpServer.listen(0, r));
   return s;
@@ -47,7 +37,6 @@ const once = (s, ev) => new Promise((r) => s.once(ev, r));
 
 before(async () => {
   dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'slide-test-'));
-  await resetDb();
   server = await start();
   base = urlOf(server);
 });

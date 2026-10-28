@@ -50,11 +50,10 @@ function sniffImage(buf) {
 
 function createApp(opts = {}) {
   const password = opts.password || process.env.TEACHER_PASSWORD || 'ogretmen123';
-  const databaseUrl = opts.databaseUrl !== undefined ? opts.databaseUrl : process.env.DATABASE_URL;
   const dataDir = opts.dataDir || path.join(__dirname, 'data');
   // Şifre değişirse eski oturum çerezleri de geçersiz olur
   const secret = process.env.SESSION_SECRET || crypto.createHash('sha256').update('slide:' + password).digest('hex');
-  const storage = createStorage({ databaseUrl, dataDir });
+  const storage = createStorage({ dataDir });
 
   let decks = [];
   const sessions = new Map(); // kod -> canlı sunum
@@ -383,14 +382,13 @@ function createApp(opts = {}) {
 
 if (require.main === module) {
   const port = Number(process.env.PORT) || 3000;
-  const { httpServer, ready, storage } = createApp();
+  const { httpServer, ready } = createApp();
   ready.then(() => httpServer.listen(port, () => {
     console.log(`Sunum sunucusu çalışıyor: http://localhost:${port}`);
     console.log(`Öğretmen paneli:         http://localhost:${port}/ogretmen`);
-    console.log(`Kayıt yeri:              ${storage.kind === 'postgres' ? 'PostgreSQL (DATABASE_URL)' : 'data/ klasörü'}`);
     if (!process.env.TEACHER_PASSWORD) console.log('Uyarı: TEACHER_PASSWORD ayarlanmadı, varsayılan şifre "ogretmen123".');
   })).catch((err) => {
-    console.error('Kayıt sistemi başlatılamadı (DATABASE_URL doğru mu?):', err.message);
+    console.error('Sunucu başlatılamadı:', err.message);
     process.exit(1);
   });
 }
