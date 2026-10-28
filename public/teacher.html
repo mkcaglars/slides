@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Öğretmen · Sunum</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%93%BD%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <strong>📽 Sunum · Öğretmen</strong>
+    <div class="row">
+      <span class="muted" id="conn" style="color:#94a3b8">Bağlanıyor…</span>
+      <button class="btn small dark hidden" id="back">← Sunumlar</button>
+      <button class="btn small dark hidden" id="logout">Çıkış</button>
+    </div>
+  </header>
+
+  <!-- Giriş -->
+  <section class="login-wrap hidden" id="v-login">
+    <form class="panel" id="login-form">
+      <h2>Öğretmen girişi</h2>
+      <div class="field"><label for="password">Şifre</label><input type="password" id="password" autocomplete="current-password" required></div>
+      <div class="error" id="login-error"></div>
+      <button class="btn primary" type="submit">Giriş</button>
+    </form>
+  </section>
+
+  <!-- Sunum kütüphanesi -->
+  <main class="layout hidden" id="v-library">
+    <div class="panel hidden" id="live-panel">
+      <h2>🔴 Canlı sunumlar</h2>
+      <div id="live-list"></div>
+    </div>
+
+    <div class="panel">
+      <div class="row between"><h2>Sunumlar</h2></div>
+      <div class="dropzone" id="dropzone">
+        <p style="margin:0 0 10px"><strong>PDF yükleyin.</strong> PowerPoint'te <em>Dosya → Farklı Kaydet → PDF</em> (veya <em>Dışa Aktar → PDF</em>) ile kaydedin.</p>
+        <label class="btn primary">⬆ PDF seç<input type="file" id="file" accept="application/pdf,.pdf" hidden></label>
+        <span class="muted">veya dosyayı buraya sürükleyin</span>
+        <div class="hidden" id="upload-status">
+          <div id="upload-text" style="margin-top:12px;font-weight:700"></div>
+          <div class="progress"><div id="upload-bar"></div></div>
+        </div>
+      </div>
+      <div id="deck-list" style="margin-top:12px"></div>
+    </div>
+  </main>
+
+  <!-- Sunucu (presenter) görünümü -->
+  <main class="presenter hidden" id="v-present">
+    <div class="p-main">
+      <div class="row between">
+        <div>
+          <div style="font-size:20px;font-weight:800" id="p-title"></div>
+          <div class="muted" style="color:#94a3b8">Sadece siz kontrol edersiniz; izleyiciler bu ekranda gösterdiğiniz slaytı görür.</div>
+        </div>
+        <div class="row">
+          <button class="btn dark" id="p-join" title="Katılım kodunu projeksiyonda göster">📢 Katılım ekranı</button>
+          <button class="btn dark" id="p-black" title="Kısayol: B">⬛ Ekranı karart</button>
+          <button class="btn dark" id="p-full" title="Kısayol: F">⛶ Tam ekran</button>
+          <button class="btn red" id="p-end">■ Sunumu bitir</button>
+        </div>
+      </div>
+      <div class="p-stage" id="p-stage">
+        <img id="p-current" alt="Şu anki slayt">
+        <div class="black-note hidden" id="p-black-note">Ekran karartıldı — izleyiciler siyah ekran görüyor</div>
+      </div>
+      <div class="p-controls">
+        <button class="btn dark" id="p-prev">◀ Geri</button>
+        <div class="counter" id="p-counter"></div>
+        <button class="btn primary" id="p-next">İleri ▶</button>
+      </div>
+      <div class="thumbs" id="p-thumbs"></div>
+    </div>
+    <aside class="p-side">
+      <div class="p-box">
+        <h3>Katılım kodu</h3>
+        <div class="p-code" id="p-code"></div>
+        <div class="p-url" id="p-url"></div>
+        <img class="p-qr" id="p-qr" alt="Katılım QR kodu">
+      </div>
+      <div class="p-box">
+        <h3>İzleyici</h3>
+        <div class="p-viewers" id="p-viewers">0</div>
+      </div>
+      <div class="p-box">
+        <h3>Sonraki slayt</h3>
+        <img class="p-next" id="p-nextimg" alt="Sonraki slayt">
+        <div class="muted" id="p-nextnote" style="color:#94a3b8;margin-top:6px"></div>
+      </div>
+      <div class="p-box p-help">
+        <h3>Kısayollar</h3>
+        <kbd>→</kbd> <kbd>Boşluk</kbd> <kbd>PgDn</kbd> ileri ·
+        <kbd>←</kbd> <kbd>PgUp</kbd> geri ·
+        <kbd>Home</kbd>/<kbd>End</kbd> ilk/son ·
+        <kbd>B</kbd> karart · <kbd>F</kbd> tam ekran.
+        Sunum kumandaları (clicker) da çalışır.
+      </div>
+    </aside>
+  </main>
+
+  <div class="join-screen hidden" id="join-screen">
+    <button class="btn dark" id="js-close">Kapat ✕</button>
+    <div class="js-title" id="js-title"></div>
+    <div class="js-step">Telefonunuzdan veya bilgisayarınızdan girin:</div>
+    <div class="js-url" id="js-url"></div>
+    <div class="js-step">Kod:</div>
+    <div class="js-code" id="js-code"></div>
+    <img id="js-qr" alt="QR kod">
+    <div class="js-viewers" id="js-viewers"></div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="/teacher.js"></script>
+</body>
+</html>

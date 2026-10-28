@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sunum İzle</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%93%BD%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="viewer">
+  <section class="join" id="s-join">
+    <h1>📽 Sunuma katıl</h1>
+    <p>Öğretmeninizin ekranda gösterdiği 6 haneli kodu girin.</p>
+    <form id="join-form" autocomplete="off">
+      <input class="code-input" id="code" inputmode="numeric" pattern="[0-9 ]*" maxlength="7" placeholder="000000" aria-label="Sunum kodu" autofocus>
+      <button class="btn primary" type="submit" id="join-btn">İzle</button>
+      <div class="error" id="join-error"></div>
+    </form>
+  </section>
+
+  <section class="hidden" id="s-view">
+    <div class="viewer-bar" id="bar">
+      <div class="title" id="v-title"></div>
+      <div class="actions">
+        <span class="btn dark small" id="v-count"></span>
+        <button class="btn dark small" id="v-full" title="Tam ekran">⛶</button>
+        <button class="btn dark small" id="v-leave">Çık</button>
+      </div>
+    </div>
+    <div class="stage" id="stage">
+      <img id="slide" alt="" draggable="false">
+      <div class="blackout hidden" id="blackout">Öğretmen ekranı kısa süreliğine kararttı</div>
+      <div class="overlay-msg hidden" id="overlay"></div>
+    </div>
+  </section>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/viewer.js"></script>
+</body>
+</html>
