@@ -387,7 +387,7 @@ document.addEventListener('keydown', (e) => {
   else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace', 'p', 'P'].includes(k)) go(s.current - 1);
   else if (k === 'Home') go(0);
   else if (k === 'End') go(s.total - 1);
-  else if (k === 'b' || k === 'B' || k === '.') toggleBlack();
+  else if (k === 'b' || k === 'B' || k === '.' || k === 'Tab') toggleBlack();
   else if (k === 'f' || k === 'F') toggleFull();
   else return;
   e.preventDefault();
